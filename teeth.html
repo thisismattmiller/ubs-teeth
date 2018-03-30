@@ -44,6 +44,11 @@
 			var windowHalfX = window.innerWidth / 2;
 			var windowHalfY = window.innerHeight / 2;
 
+			var leftAmt = 0
+			var rightAmt = 0
+			var tonguePostion = 0
+			var tongueSize = 1
+
 
 			init();
 			animate();
@@ -55,7 +60,7 @@
 				document.body.appendChild( container );
 
 				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
-				camera.position.z = 250;
+				camera.position.z = 400;
 
 				// scene
 
@@ -78,7 +83,7 @@
 				};
 
 				var textureLoader = new THREE.TextureLoader( manager );
-				var texture = textureLoader.load( 'textures/UV_Grid_Sm.jpg' );
+				var texture = textureLoader.load( 'teeth_and_tongue_set_COL.png' );
 
 				// model
 
@@ -99,9 +104,9 @@
 
 						if ( child instanceof THREE.Mesh ) {
 
-							child.geometry.scale(20, 20, 20)
+							child.geometry.scale(25, 20, 20)
 
-							// child.material.map = texture;
+							child.material.map = texture;
 
 						}
 
@@ -109,7 +114,22 @@
 
 					object.position.y = 0;
 					object.name = "tongue";
-					scene.add( object );
+
+					var box = new THREE.Box3().setFromObject( object );
+					box.center( object.position ); // this re-sets the mesh position
+					object.position.multiplyScalar( -3 );
+
+					tonguePostion = object.position.y;
+
+					var pivot = new THREE.Group();
+
+					pivot.name = "pivot"
+
+					scene.add( pivot );
+					pivot.add( object );
+
+
+					// scene.add( object );
 
 					// object2 = object.clone();
 					// object2.position.y = - 85;
@@ -124,7 +144,7 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				container.appendChild( renderer.domElement );
 
-				// document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
 				//
 
@@ -162,19 +182,45 @@
 
 			function render() {
 
-				camera.position.x = ( mouseX - camera.position.x ) * .05;
-				camera.position.y = 360 // ( mouseY - camera.position.y ) * .05;
+				window.onkeydown = (e) =>{
+					console.log(tonguePostion)
+					if (e.keyCode == 37){
+						tonguePostion = tonguePostion + 0.05;
+						console.log(tonguePostion);
+					}
+					if (e.keyCode == 39){
+						tonguePostion = tonguePostion - 0.05;
+						console.log(tonguePostion);
+					}
+					if (e.keyCode == 40){
+						tongueSize = tongueSize - 0.1;
+						console.log(tongueSize);
+					}
+
+					
+
+				}
+
+				camera.position.x = ( mouseX - camera.position.x ) * .15;
+				// camera.position.y = ( mouseY - camera.position.y ) * .15;
+				camera.position.y = 100				
 				var tongue = scene.getObjectByName( "tongue", true );
+				var pivot = scene.getObjectByName( "pivot", true );
 
 				camera.lookAt( scene.position );
 				
 				// tongue.rotation.x = Math.PI / 2
-				tongue.rotation.y = Math.PI
+				// tongue.rotation.y = Math.PI
+				pivot.rotation.y = tonguePostion;
+				tongue.scale.set(1,1,tongueSize)
+
 				// tongue.rotation.z = Math.PI / Math.floor(Math.random() * Math.floor(100));
 
 				renderer.render( scene, camera );
 
 			}
+
+
 
 		</script>
 
