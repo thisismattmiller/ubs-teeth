@@ -124,7 +124,7 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				container.appendChild( renderer.domElement );
 
-				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+				// document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
 				//
 
@@ -162,17 +162,15 @@
 
 			function render() {
 
-				camera.position.x += ( mouseX - camera.position.x ) * .05;
-				camera.position.y += ( - mouseY - camera.position.y ) * .05;
-
+				camera.position.x = ( mouseX - camera.position.x ) * .05;
+				camera.position.y = 360 // ( mouseY - camera.position.y ) * .05;
 				var tongue = scene.getObjectByName( "tongue", true );
 
 				camera.lookAt( scene.position );
+				
 				// tongue.rotation.x = Math.PI / 2
-				tongue.rotation.y = 0.5
+				tongue.rotation.y = Math.PI
 				// tongue.rotation.z = Math.PI / Math.floor(Math.random() * Math.floor(100));
-
-				console.log(tongue)
 
 				renderer.render( scene, camera );
 
