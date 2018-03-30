@@ -93,7 +93,7 @@
 				};
 
 				var loader = new THREE.OBJLoader( manager );
-				loader.load( 'tooth1.obj', function ( object ) {
+				loader.load( 'tongue.obj', function ( object ) {
 
 					object.traverse( function ( child ) {
 
@@ -107,12 +107,13 @@
 
 					} );
 
-					object.position.y = - 95;
+					object.position.y = 0;
+					object.name = "tongue";
 					scene.add( object );
 
-					object2 = object.clone();
-					object2.position.y = - 85;
-					scene.add( object2 );
+					// object2 = object.clone();
+					// object2.position.y = - 85;
+					// scene.add( object2 );
 
 				}, onProgress, onError );
 
@@ -123,7 +124,7 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				container.appendChild( renderer.domElement );
 
-				// document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
 				//
 
@@ -164,7 +165,14 @@
 				camera.position.x += ( mouseX - camera.position.x ) * .05;
 				camera.position.y += ( - mouseY - camera.position.y ) * .05;
 
+				var tongue = scene.getObjectByName( "tongue", true );
+
 				camera.lookAt( scene.position );
+				// tongue.rotation.x = Math.PI / 2
+				tongue.rotation.y = 0.5
+				// tongue.rotation.z = Math.PI / Math.floor(Math.random() * Math.floor(100));
+
+				console.log(tongue)
 
 				renderer.render( scene, camera );
 
